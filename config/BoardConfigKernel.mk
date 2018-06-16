@@ -19,6 +19,11 @@
 # These config vars are usually set in BoardConfig.mk:
 #
 #   TARGET_KERNEL_SOURCE               = Kernel source dir, optional, defaults
+#                                        to kernel/$(TARGET_DEVICE_DIR)
+#   TARGET_KERNEL_CONFIG               = Kernel defconfig
+#   TARGET_KERNEL_VARIANT_CONFIG       = Variant defconfig, optional
+#   TARGET_KERNEL_SELINUX_CONFIG       = SELinux defconfig, optional
+#   TARGET_KERNEL_ADDITIONAL_CONFIG    = Additional defconfig, optional
 #                                          to kernel/$(TARGET_DEVICE_DIR)
 #   TARGET_KERNEL_ADDITIONAL_FLAGS     = Additional make flags, optional
 #   TARGET_KERNEL_ARCH                 = Kernel Arch
@@ -160,3 +165,10 @@ KERNEL_BUILD_OUT_PREFIX :=
 ifeq ($(OUT_DIR_PREFIX),out)
 KERNEL_BUILD_OUT_PREFIX := $(BUILD_TOP)/
 endif
+
+endif # TARGET_NO_KERNEL
+
+ifneq ($(TARGET_KERNEL_ADDITIONAL_FLAGS),)
+  KERNEL_MAKE_FLAGS += $(TARGET_KERNEL_ADDITIONAL_FLAGS)
+endif
+
