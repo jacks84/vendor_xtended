@@ -261,6 +261,22 @@ $(TARGET_PREBUILT_INT_KERNEL): $(KERNEL_CONFIG) $(DEPMOD)
 			kernel_release=$$(cat $(KERNEL_RELEASE)) \
 			modules=$$(find $(MODULES_INTERMEDIATES)/lib/modules/$$kernel_release -type f -name '*.ko'); \
 			($(call build-image-kernel-modules,$$modules,$(KERNEL_MODULES_OUT),$(KERNEL_MODULE_MOUNTPOINT)/,$(KERNEL_DEPMOD_STAGING_DIR))); \
+
+			$(PATH_OVERRIDE) $(MAKE_PREBUILT) $(KERNEL_MAKE_FLAGS) -C $(KERNEL_SRC) O=$(KERNEL_OUT) ARCH=$(KERNEL_ARCH) $(KERNEL_CROSS_COMPILE) $(KERNEL_CLANG_TRIPLE) $(KERNEL_CC) modules; \
+		fi
+
+
+.PHONY: INSTALLED_KERNEL_MODULES
+INSTALLED_KERNEL_MODULES: depmod-host
+	$(hide) if grep -q '=m' $(KERNEL_CONFIG); then \
+			echo "Installing Kernel Modules"; \
+			$(call make-kernel-target,INSTALL_MOD_PATH=$(MODULES_INTERMEDIATES) modules_install); \
+			modules=$$(find $(MODULES_INTERMEDIATES) -type f -name '*.ko'); \
+			for f in $$modules; do \
+				$(KERNEL_TOOLCHAIN_PATH)strip --strip-unneeded $$f; \
+			done; \
+			($(call build-image-kernel-modules,$$modules,$(KERNEL_MODULES_OUT),$(KERNEL_MODULE_MOUNTPOINT),$(KERNEL_DEPMOD_STAGING_DIR))); \
+
 		fi
 
 .PHONY: kerneltags
