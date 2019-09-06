@@ -57,6 +57,9 @@ else
 KERNEL_ARCH := $(TARGET_KERNEL_ARCH)
 endif
 
+KERNEL_HEADERS_INSTALL_DIR := $(KERNEL_OUT)/usr
+KERNEL_HEADERS_INSTALL_DEPS := $(KERNEL_OUT)/.headers_install_deps
+
 GCC_PREBUILTS := $(BUILD_TOP)/prebuilts/gcc/$(HOST_OS)-x86
 # arm64 toolchain
 KERNEL_TOOLCHAIN_arm64 := $(GCC_PREBUILTS)/aarch64/aarch64-linux-android-4.9/bin
