@@ -221,6 +221,7 @@ endef
 # $(1): The DTB target to build (eg. dtbs, defconfig)
 define make-dtb-target
 $(call internal-make-kernel-target,$(DTBS_OUT),$(1))
+$(call internal-make-kernel-target,$(PRODUCT_OUT)/dtbs,$(1))
 endef
 
 $(KERNEL_OUT):
@@ -308,13 +309,10 @@ kernel: $(INSTALLED_KERNEL_TARGET)
 dtboimage: $(INSTALLED_DTBOIMAGE_TARGET)
 
 ifeq ($(BOARD_INCLUDE_DTB_IN_BOOTIMG),true)
-ifeq ($(BOARD_PREBUILT_DTBIMAGE_DIR),)
-$(INSTALLED_DTBIMAGE_TARGET):
+$(BOARD_PREBUILT_DTBIMAGE_DIR):
 	echo -e ${CL_GRN}"Building DTBs"${CL_RST}
 	$(call make-dtb-target,$(KERNEL_DEFCONFIG))
 	$(call make-dtb-target,dtbs)
-	cat $(shell find $(DTBS_OUT)/arch/$(KERNEL_ARCH)/boot/dts/** -type f -name "*.dtb" | sort) > $@
-endif
 .PHONY: dtbimage
 dtbimage: $(INSTALLED_DTBIMAGE_TARGET)
 endif # BOARD_INCLUDE_DTB_IN_BOOTIMG
