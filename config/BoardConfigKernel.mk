@@ -86,10 +86,6 @@ endif
 # for tools like `as`
 KERNEL_TOOLCHAIN_PATH_gcc := $(KERNEL_TOOLCHAIN_$(KERNEL_ARCH))/$(KERNEL_TOOLCHAIN_PREFIX_$(KERNEL_ARCH))
 
-ifeq ($(BOARD_INCLUDE_DTB_IN_BOOTIMG),true)
-BOARD_PREBUILT_DTBIMAGE_DIR ?= $(PRODUCT_OUT)/dtbs/arch/$(KERNEL_ARCH)/boot/dts/**
-endif
-
 # Set use the full path to the make command
 KERNEL_MAKE_CMD := $(BUILD_TOP)/prebuilts/build-tools/$(HOST_OS)-x86/bin/make
 
