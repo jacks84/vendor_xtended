@@ -1,31 +1,28 @@
 #!/bin/sh
-# Exports
-#. $ANDROID_BUILD_TOP/vendor/syberia/tools/colors
-export Changelog=Changelog.txt
+
+export Changelog=$PWD/Changelog.txt
+
 if [ -f $Changelog ];
 then
-	rm -f $Changelog
+    rm -f $Changelog
 fi
+
 touch $Changelog
-# Print something to build output
-echo ${bldppl}"Generating changelog..."${txtrst}
-for i in $(seq 7);
+
+for i in $(seq 14);
 do
 export After_Date=`date --date="$i days ago" +%F`
 k=$(expr $i - 1)
 export Until_Date=`date --date="$k days ago" +%F`
-echo "=============" >> $Changelog;
-echo "   $Until_Date" >> $Changelog;
-echo "=============" >> $Changelog;
-#repo forall -pc 'git log --after=$After_Date --until=$Until_Date --pretty=tformat:"%h  %s  [%an]" --abbrev-commit --abbrev=7' >> $Changelog
-while read path;
-    do
-    git --git-dir $ANDROID_BUILD_TOP/${path}/.git log --after=$After_Date --until=$Until_Date --pretty=tformat:"%h  %s  [%an]" --abbrev-commit --abbrev=7 >> $Changelog
-done < $ANDROID_BUILD_TOP/.repo/project.list;
+echo "====================" >> $Changelog;
+echo "     $Until_Date    " >> $Changelog;
+echo "====================" >> $Changelog;
+repo forall -c "GIT_LOG=\`git log --oneline --after=$After_Date --until=$Until_Date\` ; if [ ! -z \"\$GIT_LOG\" ]; then printf  '\n   * '; realpath \`pwd\` | sed 's|^$CURRENT_PATH/||' ; printf \"\$GIT_LOG\"; fi" >> $Changelog
+
 echo "" >> $Changelog;
 done
+
 sed -i 's/project/ */g' $Changelog
 sed -i 's/[/]$//' $Changelog
-cp $Changelog $OUT/system/etc/
+
 cp $Changelog $OUT/
-rm $Changelog
