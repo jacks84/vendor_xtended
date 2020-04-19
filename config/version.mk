@@ -6,7 +6,7 @@ XTENDED_RELEASE_VERSION = v8.0
 XTENDED_POSTFIX := $(shell date +"%Y%m%d")
 XTENDED_BUILD_EXTRA := By-Team-Xtended
 ifndef XTENDED_BUILD_TYPE
-    XTENDED_BUILD_TYPE := XPLOITED
+    XTENDED_BUILD_TYPE := MUTATE
 endif
 
 # Set all versions
